@@ -12,6 +12,7 @@ Created 2014-11-04 by Tom Loredo
 """
 from __future__ import division
 from __future__ import print_function
+from six.moves import xrange
 
 import pickle, glob
 import datetime, timeit
