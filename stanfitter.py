@@ -13,7 +13,7 @@ Created 2014-11-04 by Tom Loredo
 from __future__ import division
 from __future__ import print_function
 
-import cPickle, glob
+import pickle, glob
 import datetime, timeit
 from hashlib import md5
 from collections import Mapping, OrderedDict
@@ -616,12 +616,12 @@ class StanFitter:
         files = glob.glob(cache_path)
         if files:
             cache_path = files[0]
-            self.name, self.id, self.model = cPickle.load(open(files[0], 'rb'))
+            self.name, self.id, self.model = pickle.load(open(files[0], 'rb'))
             print('Using cached StanModel from {}...'.format(files[0]))
         else:
             self.model = pystan.StanModel(model_code=self.code)
             with open(cache_path, 'wb') as f:
-                cPickle.dump((self.name, self.id, self.model), f)
+                pickle.dump((self.name, self.id, self.model), f)
 
     def set_n_jobs(self, n_jobs):
         """
