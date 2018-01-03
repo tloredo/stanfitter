@@ -10,6 +10,7 @@ Created 2014-11-04 by Tom Loredo
 2015-04-17:  Modified for BDA class
 2018-01-02:  Modified for PyStan API updates (using v2.17)
 """
+from __future__ import print_function
 
 import cPickle, glob
 import datetime, timeit
@@ -258,7 +259,7 @@ def fitparams2attrs(fit, obj):
             name_ = name + '_'
             if hasattr(obj, name_):
                 raise ValueError('Cannot handle param name collision!')
-            print '*** Access param "{0}" via "{0}_". ***'.format(name)
+            print('*** Access param "{0}" via "{0}_". ***'.format(name))
             par_attr_names[name] = name_
         else:
             par_attr_names[name] = name
@@ -615,7 +616,7 @@ class StanFitter:
         if files:
             cache_path = files[0]
             self.name, self.id, self.model = cPickle.load(open(files[0], 'rb'))
-            print 'Using cached StanModel from {}...'.format(files[0])
+            print('Using cached StanModel from {}...'.format(files[0]))
         else:
             self.model = pystan.StanModel(model_code=self.code)
             with open(cache_path, 'wb') as f:

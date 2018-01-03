@@ -27,7 +27,10 @@ the appropriate file name and location:
   
 
 Created Apr 16, 2015 by Tom Loredo
+2018-01-02:  Modified for Python 3
 """
+
+from __future__ import print_function
 
 import numpy as np
 import scipy
@@ -134,9 +137,9 @@ fit = fitter.sample(n_iter=1000, n_chains=4)
 # Print textual summaries for the parameters monitored by Stan (the model
 # parameter mu, and the log posterior PDF, log_p).  These include basic
 # (minimal) convergence and mixing diagnostics.
-print
-print fit.mu
-print fit.log_p
+print()
+print(fit.mu)
+print(fit.log_p)
 
 # Also check convergence & mixing by examining trace plots,
 # making sure there are no obvious trends or strong, long-range correlations.
@@ -187,7 +190,7 @@ def test_Rhat():
     return abs(fit.mu.Rhat - 1.) < 0.05  # slightly more strict than 0.1 convention
 
 
-print '********************************'
-print 'Test results (should be 3*True):'
-print test_post_mean(), test_intvl(), test_Rhat()
-print '********************************\n'
+print('********************************')
+print('Test results (should be 3*True):')
+print(test_post_mean(), test_intvl(), test_Rhat())
+print('********************************\n')
