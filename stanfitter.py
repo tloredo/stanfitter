@@ -10,6 +10,7 @@ Created 2014-11-04 by Tom Loredo
 2015-04-17:  Modified for BDA class
 2018-01-02:  Modified for PyStan API updates (using v2.17)
 """
+from __future__ import division
 from __future__ import print_function
 
 import cPickle, glob

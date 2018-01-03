@@ -29,7 +29,7 @@ the appropriate file name and location:
 Created Apr 16, 2015 by Tom Loredo
 2018-01-02:  Modified for Python 3
 """
-
+from __future__ import division
 from __future__ import print_function
 
 import numpy as np
