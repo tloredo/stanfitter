@@ -11,7 +11,16 @@ Three statistical tests are run, with results printed to the terminal.  They
 will occasionally fail even with a sound installation, but this should happen
 only rarely.
 
+
 Windows users:
+
+The following tips are for using early PyStan-2 versions on Windows 8.5 with
+a free version of the MSVC compiler provided by Microsoft.  For the most 
+recent Windows setup suggestions, see:
+
+  PyStan on Windows — PyStan documentation
+  http://pystan.readthedocs.io/en/latest/windows.html
+
 To enable PyStan to find the MSVC compiler, create a distutils configuration
 file with these two lines in it:
 
