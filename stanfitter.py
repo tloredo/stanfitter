@@ -55,7 +55,7 @@ class ImmutableAttrDict(Mapping):
         self._odict = OrderedDict(*args, **kwargs)  # will copy an input dict
         # Copy items to __dict__ so they're discoverable by IPython.
         for key, value in self._odict.items():
-            if self.__dict__.has_key(key):
+            if key in self.__dict__:
                 raise ValueError('Key collision!')
             self.__dict__[key] = value
 
@@ -80,16 +80,16 @@ class ImmutableAttrDict(Mapping):
     def __getattr__(self, name):
         try:
             return self._odict[name]
-        except KeyError:  # access has_key, etc.
+        except KeyError:  # access other mapping methods
             return getattr(self._odict, name)
 
     def __setattr__(self, name, value):
         if name == '_odict':
             self.__dict__['_odict'] = value
-        elif self._odict.has_key(name):
+        elif name in self._odict:
             raise TypeError('Existing attributes may not be altered!')
         else:
-            if self.__dict__.has_key(name):
+            if name in self.__dict__:
                 raise ValueError('Key collision!')
             self._odict[name] = value
             # Copy to __dict__ so it's discoverable by IPython.
@@ -115,9 +115,9 @@ class ParamHandler(dict):
     """
 
     def __init__(self, *args, **kwargs):
-        if not kwargs.has_key('fit'):
+        if 'fit' not in kwargs:
             raise ValueError('fit argument required!')
-        if not kwargs.has_key('name'):
+        if 'name' not in kwargs:
             raise ValueError('name argument required!')
         super(ParamHandler, self).__init__(*args, **kwargs)
         # NOTE:  The following works only because the dict superclass is
