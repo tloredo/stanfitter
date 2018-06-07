@@ -50,15 +50,6 @@ from scipy import stats
 
 from stanfitter import StanFitter
 
-try:
-    import myplot
-    from myplot import ipy_ion, close_all, csavefig
-    ipy_ion()
-    #myplot.tex_on()
-    csavefig.save = False
-except ImportError:
-    ion()
-
 
 ion()
 
@@ -124,11 +115,11 @@ model {
 # time if the script is re-run without any Stan code changes.
 fitter = StanFitter(normal_mu_code)
 # Alternatively, the Stan code can be in a separate .stan file:
-#fitter = StanFitter('NormalNormal.stan')  
+#fitter = StanFitter('NormalNormal.stan')
 
 
 # Stan requires a dictionary providing the data.
-normal_mu_data = {'N': N,  'y': yvals}
+normal_mu_data = {'N': N, 'y': yvals}
 
 # The data could have been provided to StanFitter; the set_data() method
 # enables using the same model to fit multiple datasets.
@@ -171,7 +162,7 @@ pdf_ax.plot(mu_vals, pdf_vals, 'g--', lw=3, alpha=.7)
 
 #-------------------------------------------------------------------------------
 # Test cases; note they will sometimes (rarely) fail even for correct
-# code.  If the 'return' statements are changed to 'assert', these 
+# code.  If the 'return' statements are changed to 'assert', these
 # become valid nose test cases, but nose appears to have issues with PyStan
 # and/or matplotlib.
 
@@ -183,6 +174,7 @@ def test_post_mean():
     """
     return abs(fit.mu.mean - mu_post)/fit.mu.se_mean < 3.
 
+
 def test_intvl():
     """
     Check that the true mean is within the 95% interval; this should fail
@@ -190,6 +182,7 @@ def test_intvl():
     """
     lo, hi = fit.mu.q025, fit.mu.q975  # quantile attributes
     return (mu > lo) and (mu < hi)
+
 
 def test_Rhat():
     """
