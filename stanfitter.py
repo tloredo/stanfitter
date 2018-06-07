@@ -15,8 +15,10 @@ from __future__ import division
 from __future__ import print_function
 from six.moves import xrange
 
-import pickle, glob
-import datetime, timeit
+import pickle
+import glob
+import datetime
+import timeit
 from hashlib import md5
 from collections import Mapping, OrderedDict
 
@@ -36,7 +38,8 @@ if plat_is_win:
     # compiler = msvc
     # For the config file name and location (local and global choices), see:
     #   https://docs.python.org/2/install/#distutils-configuration-files
-    import setuptools, pystan
+    import setuptools
+    import pystan
 else:
     import pystan
 
@@ -101,7 +104,6 @@ class ImmutableAttrDict(Mapping):
     #     del self._od[name]
 
 
-
 # TODO: Rework ParamHandler to avoid self.__dict__ = self; see:
 # http://stackoverflow.com/questions/25660358/accessing-ordereddict-keys-like-attributes-in-python
 # See ParamValueContainer above.
@@ -140,7 +142,7 @@ class ParamHandler(dict):
         return random.choice(self.thinned, n, replace=False)
 
     def trace(self, chain=None, step=True, axes=None,
-                    xlabel=None, ylabel=None, **kwds):
+              xlabel=None, ylabel=None, **kwds):
         """
         Make a trace plot for the samples in chain `chain`.  If `chain` is None,
         show traces for all chains, iterating colors accorting to mpl defaults.
@@ -148,7 +150,7 @@ class ParamHandler(dict):
         By default, a step plot is used; set `step` to False for a line plot.
         """
         if axes is None:
-            fig = plt.figure(figsize=(10,4))
+            fig = plt.figure(figsize=(10, 4))
             fig.subplots_adjust(bottom=.2, top=.9)
             axes = plt.subplot(111)
         if chain is None:
@@ -196,9 +198,9 @@ class ParamHandler(dict):
         s += 'Convergence and mixing diagnostics:  '
         s += 'Rhat = {:.2f}, ESS = {:d}\n'.format(self.Rhat, int(self.ess))
         s += 'Mean (se), median, sd:  {:{fmt}} ({:{fmt}}),  {:{fmt}},  {:{fmt}}\n'.format(
-                self.mean, self.se_mean, self.median, self.sd, fmt=fmt)
+            self.mean, self.se_mean, self.median, self.sd, fmt=fmt)
         s += 'Central intvls:  50%: [{:{fmt}}, {:{fmt}}];  95%: [{:{fmt}}, {:{fmt}}]\n'.format(
-                self.q25, self.q75, self.q025, self.q975, fmt=fmt)
+            self.q25, self.q75, self.q025, self.q975, fmt=fmt)
         return s
 
     def __str__(self):
@@ -214,9 +216,9 @@ def fitparams2attrs(fit, obj):
 
     `par_names` : list of names of model parameters (unicode strings), not
         including the log_p "parameter" also tracked by Stan
- 
+
     `par_dims` : dict of dimensions of parameters
- 
+
     `par_attr_names` : dict of attribute names used to store parameter values
         in a StanFitResults instance; this is usually just the parameter name
         unless there is a collision with one of the initial attributes of
@@ -269,7 +271,6 @@ def fitparams2attrs(fit, obj):
     obj.par_attr_names = par_attr_names
 
 
-
 class StanFitResults:
     """
     Container class storing all results from a Stan fit, i.e., a run of
@@ -278,7 +279,7 @@ class StanFitResults:
 
     # These keys are from the raw summary col names; hope they won't change!
     # Map them to valid Python attribute names.
-    col_map = {'mean':'mean',
+    col_map = {'mean' : 'mean',
                'se_mean' : 'se_mean',
                'sd' : 'sd',
                '2.5%' : 'q025',
@@ -368,12 +369,12 @@ class StanFitResults:
             fname = name  # full name to store in the handler
             permuted = self.permuted[key]
             row = self.sum_rows.index(key)
-            chains = self.chains[:,:,row]
+            chains = self.chains[:, :, row]
         else:  # array case
             s_indx = [str(i) for i in indx]
             fname = name + '[' + ','.join(s_indx) + ']'
             row = self.sum_rows.index(fname)
-            chains = self.chains[:,:,row]
+            chains = self.chains[:, :, row]
             # We want something like self.permuted[key][:,indx], except the
             # last slice isn't valid syntax.
             # Get permuted samples but with 1st axis last, to make it easy to
@@ -543,7 +544,7 @@ class StanFitter:
     a model, and easy access to fit results via attributes.
     """
 
-    def __init__(self, source, data=None, n_chains=None, n_iter=None, 
+    def __init__(self, source, data=None, n_chains=None, n_iter=None,
                  name=None, n_jobs=-1, **kwds):
         """
         Prepare a Stan model; perform a fit (computing posterior samples
@@ -608,7 +609,7 @@ class StanFitter:
         else:
             self.fits = None
             return None
-    
+
     def _compile(self):
         """
         Compile a Stan model if necessary, loading a previously compiled
@@ -678,12 +679,12 @@ class StanFitter:
         if n_chains is None:
             n_chains = self.n_chains
         else:
-           self.n_chains = n_chains
+            self.n_chains = n_chains
         self.n_iter = n_iter
         # The actual fit!
         start_time = timeit.default_timer()
         fit = self.model.sampling(data=self.data, chains=self.n_chains,
-                  iter=self.n_iter, n_jobs=self.n_jobs, **kwds)
+                                  iter=self.n_iter, n_jobs=self.n_jobs, **kwds)
         elapsed = timeit.default_timer() - start_time
         # fit = pystan.stan(fit=self.fit, data=self.data, chains=self.n_chains,
         #                        iter=self.n_iter, **kwds)
@@ -695,7 +696,7 @@ class StanFitter:
         fit.time_samp = elapsed
         return fit
 
-    def mode(self, **kwds):
+    def mode(self, data=None, **kwds):
         """
         Return the mode of the posterior PDF as an object with both a dict
         and an attribute interface to the parameter values.
@@ -704,6 +705,8 @@ class StanFitter:
         See the docstring for self.model.optimizing for more info.  Do
         not provide an `as_vector` argument.
         """
+        if data is not None:
+            self.set_data(data)
         start_time = timeit.default_timer()
         mode_dict = self.model.optimizing(data=self.data, as_vector=False, **kwds)
         elapsed = timeit.default_timer() - start_time
@@ -711,4 +714,3 @@ class StanFitter:
         point.log_p = mode_dict['value']
         point.time_opt = elapsed
         return point
-
