@@ -113,7 +113,7 @@ model {
 
 # Invoke Stan to build the model, caching the built model in the CWD to save
 # time if the script is re-run without any Stan code changes.
-fitter = StanFitter(normal_mu_code)
+fitter = StanFitter(normal_mu_code, name='NormNorm')
 # Alternatively, the Stan code can be in a separate .stan file:
 #fitter = StanFitter('NormalNormal.stan')
 
@@ -128,7 +128,7 @@ fitter.set_data(normal_mu_data)
 # Run 4 chains of 1000 iters; Stan keeps the last half of each -> 2k samples.
 # The fitter returns a StanFitResults instance, whose attributes provide
 # access to the fit results.
-fit = fitter.sample(n_iter=1000, n_chains=4)
+fit = fitter.sample(n_iter=10000, n_chains=4)
 
 
 #-------------------------------------------------------------------------------
